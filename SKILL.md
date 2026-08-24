@@ -14,8 +14,14 @@ description: >
   credentials、PAT 认证失败、推送失败诊断.
 description_zh: GitHub PAT 认证排障——先查命令与环境变量传递，再交叉验证，最后才判断 token 状态
 description_en: GitHub PAT Debugging
-version: 1.0.1
+version: 1.0.2
 agent_created: true
+not_for:
+  - GitHub Actions workflow failures (different failure domain)
+  - SSH key authentication issues (PAT is HTTPS token-based)
+  - OAuth app or GitHub App token flows (different token types)
+  - Rate limiting (HTTP 429) rather than authentication (HTTP 401) errors
+  - Git merge or rebase conflicts (not auth-related)
 ---
 
 # github-pat-debugging
