@@ -5,7 +5,7 @@ displayName: GitHub PAT Debugging
 description: 排查 GitHub PAT 认证失败、401、Bad credentials、推送失败、token 看起来失效等问题。先检查命令、变量传递、路径和请求参数，再用 curl、Node、Python 或 PowerShell 交叉验证，确认后才判断权限、撤销或网络原因。适用于 GitHub API、Contents API、GitHub Pages 和 Skill 镜像推送。 Diagnose GitHub Personal Access Token failures before declaring a token expired or revoked.
 description_zh: GitHub PAT 认证排障
 description_en: Debug GitHub PAT failures
-version: "1.0.4""
+version: "1.0.5"
 disable: false
 agent_created: true
 ---
@@ -48,6 +48,7 @@ agent_created: true
 - A 404 on a private repo's web page or raw URL (unauthenticated) is privacy hiding, not deletion. Check with an authenticated API call before concluding the repo is gone.
 - `GET /users/{name}/repos` lists **public repos only**, even with a valid token. To audit the full inventory including private repos, call `GET /user/repos?visibility=all` authenticated as that user — otherwise "repo missing" conclusions are wrong by construction.
 - Shell shims and wrappers may silently drop environment variables on the way to child processes. If a token read via `env` or `$VAR` arrives empty in one runtime but works in another, read the token from its file inside the script instead of relying on env propagation.
+- A token file saved with Windows CRLF line endings sends a trailing `\r` as part of the token and returns 401 regardless of validity — one more reason step 2 inspects byte count and trailing bytes before concluding anything about the token itself.
 
 ## Verification
 - Run an authenticated `GET /user` with the corrected runtime and confirm HTTP 200 plus the expected login, without printing the token.
