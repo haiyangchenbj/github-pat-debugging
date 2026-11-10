@@ -5,7 +5,7 @@ displayName: GitHub PAT Debugging
 description: 排查 GitHub PAT 认证失败、401、Bad credentials、推送失败、token 看起来失效等问题。先检查命令、变量传递、路径和请求参数，再用 curl、Node、Python 或 PowerShell 交叉验证，确认后才判断权限、撤销或网络原因。适用于 GitHub API、Contents API、GitHub Pages 和 Skill 镜像推送。 Diagnose GitHub Personal Access Token failures before declaring a token expired or revoked.
 description_zh: GitHub PAT 认证排障
 description_en: Debug GitHub PAT failures
-version: "1.0.5"
+version: "1.0.6"
 disable: false
 agent_created: true
 ---
@@ -42,6 +42,7 @@ agent_created: true
 ## Pitfalls
 - `VAR=value command` exports the variable only to that command; `VAR=value && command` does not export it to the later command.
 - A `401` from Node with `process.env.TOKEN` unset is a local process bug, not evidence of a revoked PAT.
+- A 200 from `GET /user` proves the token is valid, not that it is authorized for the write: if the Contents API write returns 403, check scope and repository access (see `references/token-failure-modes.md`) before treating the token as revoked.
 - `Never used` or a stale "last used" label is weaker evidence than a live authenticated `GET /user`; use the latter for runtime validation.
 - Do not print, commit, or paste a full PAT. If a token has been exposed, rotate it after completing the needed deployment.
 - Do not overwrite a remote file without first retrieving its current SHA.
